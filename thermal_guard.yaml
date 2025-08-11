@@ -1,0 +1,21 @@
+thermal_guard:
+  enabled: true
+  check_interval: 30  # saniye
+  max_temp_celsius: 85
+  actions:
+    - type: notify
+      message: "⚠️ Sistem sıcaklığı kritik seviyeye ulaştı!"
+    - type: snapshot
+      vm: "work-vm"
+      label: "thermal_guard"
+    - type: shutdown
+      vm: "render-vm"
+      condition: "temp > 90"
+  logging:
+    path: "/var/log/thermal_guard.log"
+    level: "info"
+  sensors:
+    - name: "coretemp"
+      path: "/sys/class/thermal/thermal_zone0/temp"
+    - name: "nvme0"
+      path: "/sys/class/hwmon/hwmon1/temp1_input"
